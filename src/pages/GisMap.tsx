@@ -97,10 +97,10 @@ export default function GisMap() {
         <p className="text-sm text-paper-faint mt-1">Interactive geospatial view of complaints, historical risk, predictions and cash-out infrastructure.</p>
       </div>
 
-      <div className="grid grid-cols-4 gap-6">
-        <div className="col-span-3">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className="lg:col-span-3">
           <Panel className="overflow-hidden">
-            <div className="h-[600px] relative">
+            <div className="h-[70vh] max-h-[420px] sm:max-h-[520px] lg:h-[600px] lg:max-h-none relative">
               <MapContainer center={[CHENNAI_CENTER.lat, CHENNAI_CENTER.lng]} zoom={12} style={{ height: '100%', width: '100%' }}>
                 <TileLayer
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -204,9 +204,9 @@ export default function GisMap() {
                 ['banks', 'Bank Branches', '#22c55e'],
                 ['merchants', 'Merchant Cash-Out Points', '#a78bfa'],
               ] as Array<[keyof Layers, string, string]>).map(([key, label, color]) => (
-                <label key={key} className="flex items-center justify-between cursor-pointer">
+                <label key={key} className="flex items-center justify-between gap-3 cursor-pointer py-1">
                   <LegendRow color={color} label={label} />
-                  <input type="checkbox" checked={layers[key]} onChange={() => toggle(key)} className="accent-intel-500" />
+                  <input type="checkbox" checked={layers[key]} onChange={() => toggle(key)} className="w-5 h-5 shrink-0 accent-intel-500" />
                 </label>
               ))}
             </div>

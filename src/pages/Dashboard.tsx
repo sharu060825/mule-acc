@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useAppState } from '../state/AppState'
 import { HIGH_RISK_ZONES, zoneById } from '../data/mockData'
-import { Metric, Panel, PanelHeader, RiskBadge, StatusBadge, AlertStatusBadge, formatINR, formatTime, EmptyState } from '../components/ui/Primitives'
+import { Metric, Panel, PanelHeader, RiskBadge, StatusBadge, AlertStatusBadge, TableScroll, formatINR, formatTime, EmptyState } from '../components/ui/Primitives'
 
 export default function Dashboard() {
   const { complaints, alerts, predictions, selectComplaint } = useAppState()
@@ -35,7 +35,7 @@ export default function Dashboard() {
         <p className="text-sm text-paper-faint mt-1">Live intelligence overview across active cybercrime complaints and predicted cash-out activity.</p>
       </div>
 
-      <div className="grid grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
         <Metric label="Active Complaints" value={activeComplaints.length} tone="intel" />
         <Metric label="High-Risk Incidents" value={highRisk.length} tone="critical" />
         <Metric label="Predicted Cash-Outs" value={predictedCount} />
@@ -43,10 +43,10 @@ export default function Dashboard() {
         <Metric label="Accounts Flagged" value={flaggedAccounts} />
       </div>
 
-      <div className="grid grid-cols-3 gap-6">
-        <Panel className="col-span-2">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <Panel className="lg:col-span-2">
           <PanelHeader title="Active Incidents" subtitle={`${activeComplaints.length} complaints currently in the pipeline`} />
-          <div className="overflow-x-auto">
+          <TableScroll>
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-xs text-paper-faint border-b border-line-soft">
@@ -77,7 +77,7 @@ export default function Dashboard() {
                 ))}
               </tbody>
             </table>
-          </div>
+          </TableScroll>
         </Panel>
 
         <Panel>
@@ -89,7 +89,7 @@ export default function Dashboard() {
                 <div className="text-lg font-medium mono text-intel-400">{zoneById(predictions[topPrediction.id].zone).name}</div>
                 <div className="text-xs text-paper-faint mono">{predictions[topPrediction.id].zone}</div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <div className="text-xs text-paper-faint mb-1">Confidence</div>
                   <div className="text-lg font-medium mono">{predictions[topPrediction.id].confidence}%</div>
@@ -113,7 +113,7 @@ export default function Dashboard() {
         </Panel>
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Panel>
           <PanelHeader title="High-Risk Zones" subtitle="Zones ranked by predicted cash-out activity" />
           <div className="divide-y divide-line-soft">
@@ -121,12 +121,12 @@ export default function Dashboard() {
               .sort((a, b) => b.predictedActivity - a.predictedActivity)
               .slice(0, 5)
               .map((z) => (
-                <div key={z.zone} className="flex items-center justify-between px-5 py-3">
+                <div key={z.zone} className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-5">
                   <div>
                     <div className="text-sm text-paper">{zoneById(z.zone).name}</div>
                     <div className="text-xs text-paper-faint mono">{z.zone} · {z.complaintCount} complaints</div>
                   </div>
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3 sm:gap-4">
                     <div className="text-right">
                       <div className="text-xs text-paper-faint">Historical</div>
                       <div className="text-sm mono text-paper-dim">{z.historicalActivity}</div>
@@ -149,7 +149,7 @@ export default function Dashboard() {
           ) : (
             <div className="divide-y divide-line-soft">
               {recentDispatches.map((a) => (
-                <div key={a.id} className="flex items-center justify-between px-5 py-3">
+                <div key={a.id} className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-5">
                   <div>
                     <div className="text-sm text-paper">{a.complaintId} → {a.recipient}</div>
                     <div className="text-xs text-paper-faint mt-0.5">{a.intelligence}</div>

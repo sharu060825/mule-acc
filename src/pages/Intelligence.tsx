@@ -16,9 +16,9 @@ function Field({ label, value }: { label: string; value: string | number }) {
 
 function Group({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="border-t border-line-soft first:border-t-0 px-5 py-4">
+    <div className="border-t border-line-soft first:border-t-0 px-4 py-4 sm:px-5">
       <div className="text-xs font-medium text-intel-400 mb-3 tracking-tight">{title}</div>
-      <div className="grid grid-cols-3 gap-4">{children}</div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">{children}</div>
     </div>
   )
 }
@@ -39,7 +39,7 @@ export default function Intelligence() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-start justify-between gap-4 flex-wrap">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div>
           <h1 className="text-xl font-medium tracking-tight">Input Intelligence</h1>
           <p className="text-sm text-paper-faint mt-1">What the system currently knows about {c.id}.</p>
@@ -113,7 +113,7 @@ export default function Intelligence() {
             {showFeatures ? 'Hide' : 'Show'} Feature Details — 88 prediction inputs
           </button>
           {showFeatures && (
-            <div className="mt-4 grid grid-cols-2 gap-6">
+            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-6">
               {FEATURE_GROUPS.map((g) => (
                 <div key={g.group}>
                   <div className="text-xs font-medium text-paper-dim mb-2">{g.group}</div>
@@ -133,7 +133,7 @@ export default function Intelligence() {
 
       <Panel>
         <PanelHeader title="Transaction Trail" subtitle="Fund movement from victim to potential cash-out" />
-        <div className="px-5 py-6 space-y-0">
+        <div className="px-4 py-5 sm:px-5 sm:py-6 space-y-0">
           {trail.map((node, i) => (
             <div key={node.id}>
               <div className="border border-line-soft rounded-md px-4 py-3 bg-panel-raised">
@@ -141,7 +141,7 @@ export default function Intelligence() {
                   <span className="text-xs font-medium mono text-intel-400 tracking-wide">{node.label}</span>
                   <span className="text-xs text-paper-faint mono">{node.timestamp}</span>
                 </div>
-                <div className="grid grid-cols-4 gap-3 text-xs">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
                   <div><div className="text-paper-faint mb-0.5">Account</div><div className="text-paper-dim mono truncate">{node.account}</div></div>
                   <div><div className="text-paper-faint mb-0.5">Amount</div><div className="text-paper mono">{formatINR(node.amount)}</div></div>
                   <div><div className="text-paper-faint mb-0.5">Channel</div><div className="text-paper-dim">{node.channel}</div></div>
@@ -161,7 +161,7 @@ export default function Intelligence() {
 
       <Panel>
         <PanelHeader title="Response Timeline" subtitle="Stage-by-stage intelligence pipeline for this complaint" />
-        <div className="px-5 py-5 space-y-0">
+        <div className="px-4 py-5 sm:px-5 space-y-0">
           {timeline.map((stage, i) => (
             <div key={stage.key} className="flex gap-4">
               <div className="flex flex-col items-center">

@@ -1,6 +1,6 @@
 import { Radio, CheckCheck } from 'lucide-react'
 import { useAppState } from '../state/AppState'
-import { Panel, PanelHeader, Button, AlertStatusBadge, RiskBadge, EmptyState } from '../components/ui/Primitives'
+import { Panel, PanelHeader, Button, AlertStatusBadge, RiskBadge, EmptyState, TableScroll } from '../components/ui/Primitives'
 import ComplaintPicker from '../components/ui/ComplaintPicker'
 import type { Alert, RecipientType } from '../types'
 
@@ -32,7 +32,7 @@ export default function Alerts() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-start justify-between gap-4 flex-wrap">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div>
           <h1 className="text-xl font-medium tracking-tight">Alerts & Dispatch</h1>
           <p className="text-sm text-paper-faint mt-1">Prepare and dispatch actionable intelligence to response partners.</p>
@@ -45,7 +45,7 @@ export default function Alerts() {
           title="Dispatch Intelligence"
           subtitle={selectedComplaint ? `For ${selectedComplaint.id}` : undefined}
           action={
-            <Button onClick={handleDispatch} disabled={!canDispatch} variant="critical">
+            <Button onClick={handleDispatch} disabled={!canDispatch} variant="critical" className="w-full sm:w-auto">
               <Radio size={14} /> Dispatch Intelligence
             </Button>
           }
@@ -58,10 +58,10 @@ export default function Alerts() {
           ) : complaintAlerts.length === 0 ? (
             <div className="text-xs text-paper-faint">No prepared alerts yet for this complaint. Dispatch to generate them.</div>
           ) : (
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {complaintAlerts.map((a) => (
                 <div key={a.id} className={`border rounded-md px-4 py-3 ${PRIORITY_STYLES[a.priority]}`}>
-                  <div className="flex items-center justify-between mb-1.5">
+                  <div className="flex items-center justify-between gap-2 mb-1.5">
                     <span className="text-xs mono">{RECIPIENT_LABEL[a.recipient]}</span>
                     <AlertStatusBadge status={a.status} />
                   </div>
@@ -70,7 +70,7 @@ export default function Alerts() {
                     <button
                       onClick={() => acknowledgeAlert(a.id)}
                       disabled={a.status === 'ACKNOWLEDGED'}
-                      className="mt-2 flex items-center gap-1 text-xs text-intel-400 hover:text-intel-300 disabled:text-paper-faint disabled:cursor-not-allowed"
+                      className="mt-2 flex items-center gap-1.5 py-1.5 text-xs text-intel-400 hover:text-intel-300 disabled:text-paper-faint disabled:cursor-not-allowed"
                     >
                       <CheckCheck size={12} /> {a.status === 'ACKNOWLEDGED' ? 'Acknowledged' : 'Acknowledge'}
                     </button>
@@ -87,7 +87,7 @@ export default function Alerts() {
         {sortedAlerts.length === 0 ? (
           <EmptyState title="No alerts yet" detail="Alerts appear here once intelligence has been dispatched for a complaint." />
         ) : (
-          <div className="overflow-x-auto">
+          <TableScroll>
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-xs text-paper-faint border-b border-line-soft">
@@ -116,7 +116,7 @@ export default function Alerts() {
                 ))}
               </tbody>
             </table>
-          </div>
+          </TableScroll>
         )}
       </Panel>
     </div>

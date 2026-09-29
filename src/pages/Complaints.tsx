@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Search } from 'lucide-react'
 import { useAppState } from '../state/AppState'
 import { ALL_FRAUD_TYPES, zoneById } from '../data/mockData'
-import { Panel, RiskBadge, StatusBadge, formatINR, EmptyState } from '../components/ui/Primitives'
+import { Panel, RiskBadge, StatusBadge, TableScroll, formatINR, EmptyState } from '../components/ui/Primitives'
 import type { ComplaintStatus, RiskLevel } from '../types'
 
 type SortKey = 'newest' | 'amount-desc' | 'amount-asc' | 'risk'
@@ -62,8 +62,8 @@ export default function Complaints() {
         <p className="text-sm text-paper-faint mt-1">{filtered.length} of {complaints.length} complaints shown</p>
       </div>
 
-      <div className="flex flex-wrap items-center gap-3">
-        <div className="relative flex-1 min-w-[220px]">
+      <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3">
+        <div className="relative flex-1 min-w-0 sm:min-w-[220px]">
           <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-paper-faint" />
           <input
             value={query}
@@ -72,31 +72,33 @@ export default function Complaints() {
             className="w-full bg-panel border border-line rounded-md pl-9 pr-3 py-2 text-sm text-paper placeholder:text-paper-faint focus:outline-none focus:border-intel-500"
           />
         </div>
-        <select value={fraudFilter} onChange={(e) => setFraudFilter(e.target.value)} className="bg-panel border border-line rounded-md px-3 py-2 text-sm text-paper-dim focus:outline-none focus:border-intel-500">
-          <option value="ALL">All fraud types</option>
-          {ALL_FRAUD_TYPES.map((f) => <option key={f} value={f}>{f}</option>)}
-        </select>
-        <select value={riskFilter} onChange={(e) => setRiskFilter(e.target.value)} className="bg-panel border border-line rounded-md px-3 py-2 text-sm text-paper-dim focus:outline-none focus:border-intel-500">
-          <option value="ALL">All risk levels</option>
-          {risks.map((r) => <option key={r} value={r}>{r}</option>)}
-        </select>
-        <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="bg-panel border border-line rounded-md px-3 py-2 text-sm text-paper-dim focus:outline-none focus:border-intel-500">
-          <option value="ALL">All statuses</option>
-          {statuses.map((s) => <option key={s} value={s}>{s}</option>)}
-        </select>
-        <select value={sort} onChange={(e) => setSort(e.target.value as SortKey)} className="bg-panel border border-line rounded-md px-3 py-2 text-sm text-paper-dim focus:outline-none focus:border-intel-500">
-          <option value="newest">Newest first</option>
-          <option value="amount-desc">Amount: high to low</option>
-          <option value="amount-asc">Amount: low to high</option>
-          <option value="risk">Risk: highest first</option>
-        </select>
+        <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-3">
+          <select value={fraudFilter} onChange={(e) => setFraudFilter(e.target.value)} className="bg-panel border border-line rounded-md px-3 py-2.5 sm:py-2 text-sm text-paper-dim focus:outline-none focus:border-intel-500">
+            <option value="ALL">All fraud types</option>
+            {ALL_FRAUD_TYPES.map((f) => <option key={f} value={f}>{f}</option>)}
+          </select>
+          <select value={riskFilter} onChange={(e) => setRiskFilter(e.target.value)} className="bg-panel border border-line rounded-md px-3 py-2.5 sm:py-2 text-sm text-paper-dim focus:outline-none focus:border-intel-500">
+            <option value="ALL">All risk levels</option>
+            {risks.map((r) => <option key={r} value={r}>{r}</option>)}
+          </select>
+          <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="bg-panel border border-line rounded-md px-3 py-2.5 sm:py-2 text-sm text-paper-dim focus:outline-none focus:border-intel-500">
+            <option value="ALL">All statuses</option>
+            {statuses.map((s) => <option key={s} value={s}>{s}</option>)}
+          </select>
+          <select value={sort} onChange={(e) => setSort(e.target.value as SortKey)} className="bg-panel border border-line rounded-md px-3 py-2.5 sm:py-2 text-sm text-paper-dim focus:outline-none focus:border-intel-500">
+            <option value="newest">Newest first</option>
+            <option value="amount-desc">Amount: high to low</option>
+            <option value="amount-asc">Amount: low to high</option>
+            <option value="risk">Risk: highest first</option>
+          </select>
+        </div>
       </div>
 
       <Panel>
         {filtered.length === 0 ? (
           <EmptyState title="No complaints match your filters" detail="Try clearing a filter or searching a different term." />
         ) : (
-          <div className="overflow-x-auto">
+          <TableScroll>
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-xs text-paper-faint border-b border-line-soft">
@@ -127,7 +129,7 @@ export default function Complaints() {
                 ))}
               </tbody>
             </table>
-          </div>
+          </TableScroll>
         )}
       </Panel>
     </div>

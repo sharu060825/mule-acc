@@ -11,12 +11,12 @@ export function Panel({ children, className = '' }: { children: ReactNode; class
 
 export function PanelHeader({ title, action, subtitle }: { title: string; action?: ReactNode; subtitle?: string }) {
   return (
-    <div className="flex items-start justify-between gap-4 px-5 py-4 border-b border-line-soft">
+    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4 px-4 py-3.5 sm:px-5 sm:py-4 border-b border-line-soft">
       <div>
-        <h3 className="text-[0.95rem] font-medium text-paper tracking-tight">{title}</h3>
+        <h3 className="text-sm sm:text-[0.95rem] font-medium text-paper tracking-tight">{title}</h3>
         {subtitle && <p className="text-xs text-paper-faint mt-0.5">{subtitle}</p>}
       </div>
-      {action}
+      {action && <div className="shrink-0">{action}</div>}
     </div>
   )
 }
@@ -75,9 +75,9 @@ export function Metric({ label, value, tone = 'default' }: { label: string; valu
     intel: 'text-intel-400',
   }[tone]
   return (
-    <div className="bg-panel border border-line rounded-md px-5 py-4">
+    <div className="bg-panel border border-line rounded-md px-4 py-3.5 sm:px-5 sm:py-4">
       <div className="text-xs text-paper-faint mb-1.5">{label}</div>
-      <div className={`text-2xl font-medium mono ${toneClass}`}>{value}</div>
+      <div className={`text-xl sm:text-2xl font-medium mono ${toneClass}`}>{value}</div>
     </div>
   )
 }
@@ -97,7 +97,7 @@ export function Button({
   className?: string
   type?: 'button' | 'submit'
 }) {
-  const base = 'inline-flex items-center justify-center gap-2 rounded px-4 py-2 text-sm font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed'
+  const base = 'inline-flex items-center justify-center gap-2 rounded px-4 py-2.5 sm:py-2 min-h-[42px] sm:min-h-0 text-sm font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed'
   const styles = {
     primary: 'bg-intel-600 text-white hover:bg-intel-500',
     secondary: 'bg-panel-raised text-paper border border-line hover:border-paper-faint',
@@ -108,6 +108,15 @@ export function Button({
     <button type={type} onClick={onClick} disabled={disabled} className={`${base} ${styles} ${className}`}>
       {children}
     </button>
+  )
+}
+
+/** Wraps a wide table so it scrolls horizontally on narrow viewports instead of squeezing columns or overflowing the page. */
+export function TableScroll({ children, minWidth = 640 }: { children: ReactNode; minWidth?: number }) {
+  return (
+    <div className="overflow-x-auto">
+      <div style={{ minWidth }}>{children}</div>
+    </div>
   )
 }
 

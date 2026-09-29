@@ -14,7 +14,7 @@ const STRENGTH_COLOR: Record<'LOW' | 'MEDIUM' | 'HIGH', string> = { LOW: 'bg-pap
 
 function CandidateCard({ candidate, onView }: { candidate: CashOutCandidate; onView: () => void }) {
   return (
-    <div className="border border-line-soft rounded-md px-4 py-3 bg-panel-raised flex items-center justify-between gap-4">
+    <div className="border border-line-soft rounded-md px-4 py-3 bg-panel-raised flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
       <div className="min-w-0">
         <div className="flex items-center gap-2">
           <span className="text-[0.65rem] mono px-1.5 py-0.5 rounded bg-ink border border-line-soft text-paper-faint">{candidate.type}</span>
@@ -24,12 +24,12 @@ function CandidateCard({ candidate, onView }: { candidate: CashOutCandidate; onV
           {candidate.id} · {candidate.distanceKm} km · {candidate.historicalActivity} historical activity
         </div>
       </div>
-      <div className="flex items-center gap-3 shrink-0">
-        <div className="text-right">
+      <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
+        <div className="text-left sm:text-right">
           <div className="text-sm mono text-paper">{candidate.confidence}%</div>
           <RiskBadge risk={candidate.risk} />
         </div>
-        <button onClick={onView} className="flex items-center gap-1 text-xs text-intel-400 hover:text-intel-300 mono whitespace-nowrap">
+        <button onClick={onView} className="flex items-center gap-1 text-xs text-intel-400 hover:text-intel-300 mono whitespace-nowrap py-1.5">
           <MapPin size={13} /> View on Map
         </button>
       </div>
@@ -143,7 +143,7 @@ export default function Predictions() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-start justify-between gap-4 flex-wrap">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div>
           <h1 className="text-xl font-medium tracking-tight">Predictive Analysis</h1>
           <p className="text-sm text-paper-faint mt-1">Run the prediction model against {c.id} to forecast the likely cash-out zone.</p>
@@ -154,7 +154,7 @@ export default function Predictions() {
       <Panel>
         <PanelHeader
           title="Run Predictive Analysis"
-          action={<Button onClick={handleRunPrediction} disabled={analyzing}>{analyzing ? 'Analyzing…' : 'Run Predictive Analysis'}</Button>}
+          action={<Button onClick={handleRunPrediction} disabled={analyzing} className="w-full sm:w-auto">{analyzing ? 'Analyzing…' : 'Run Predictive Analysis'}</Button>}
         />
         {analyzing ? (
           <div className="px-5 py-6 space-y-3">
@@ -184,7 +184,7 @@ export default function Predictions() {
         <>
           <Panel>
             <PanelHeader title="Prediction Result" />
-            <div className="px-5 py-5 grid grid-cols-4 gap-6">
+            <div className="px-4 py-5 sm:px-5 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               <div>
                 <div className="text-xs text-paper-faint mb-1">Predicted Cash-Out Zone</div>
                 <div className="text-lg font-medium mono text-intel-400">{zoneById(prediction.zone).name}</div>
@@ -218,12 +218,14 @@ export default function Predictions() {
             <PanelHeader title="Prediction Evidence" subtitle="Simulated explanatory factors — not model feature importance" />
             <div className="px-5 py-5 space-y-3">
               {prediction.evidence.map((e) => (
-                <div key={e.factor} className="flex items-center gap-4">
-                  <div className="w-48 text-sm text-paper-dim shrink-0">{e.factor}</div>
-                  <div className="flex-1 h-1.5 rounded-full bg-line-soft overflow-hidden">
-                    <div className={`h-full rounded-full ${STRENGTH_WIDTH[e.strength]} ${STRENGTH_COLOR[e.strength]}`} />
+                <div key={e.factor} className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-4">
+                  <div className="sm:w-48 text-sm text-paper-dim shrink-0">{e.factor}</div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-full sm:flex-1 h-1.5 rounded-full bg-line-soft overflow-hidden">
+                      <div className={`h-full rounded-full ${STRENGTH_WIDTH[e.strength]} ${STRENGTH_COLOR[e.strength]}`} />
+                    </div>
+                    <div className="w-16 shrink-0 text-right text-xs mono text-paper-faint">{e.strength}</div>
                   </div>
-                  <div className="w-16 text-right text-xs mono text-paper-faint">{e.strength}</div>
                 </div>
               ))}
               <div className="text-xs text-paper-faint pt-2 border-t border-line-soft mt-4">
@@ -239,21 +241,21 @@ export default function Predictions() {
           title="Live Intelligence Demonstration"
           subtitle="Frontend-only walkthrough of the full intelligence pipeline"
           action={
-            <div className="flex items-center gap-2">
-              <Button variant="secondary" onClick={startLive} disabled={liveRunning && !livePaused}>
+            <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+              <Button variant="secondary" onClick={startLive} disabled={liveRunning && !livePaused} className="flex-1 sm:flex-none">
                 <Play size={14} /> Start
               </Button>
-              <Button variant="secondary" onClick={pauseLive} disabled={!liveRunning}>
+              <Button variant="secondary" onClick={pauseLive} disabled={!liveRunning} className="flex-1 sm:flex-none">
                 <Pause size={14} /> {livePaused ? 'Resume' : 'Pause'}
               </Button>
-              <Button variant="ghost" onClick={resetLive}>
+              <Button variant="ghost" onClick={resetLive} className="flex-1 sm:flex-none">
                 <RotateCcw size={14} /> Reset
               </Button>
             </div>
           }
         />
         <div className="px-5 py-5">
-          <div className="grid grid-cols-11 gap-1.5 mb-5">
+          <div className="grid grid-cols-6 sm:grid-cols-11 gap-1.5 mb-5">
             {LIVE_STEPS.map((_, i) => (
               <div key={i} className={`h-1.5 rounded-full ${i <= liveStep && liveRunning ? 'bg-intel-500' : 'bg-line-soft'}`} />
             ))}
