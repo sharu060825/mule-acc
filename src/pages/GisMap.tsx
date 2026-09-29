@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { MapContainer, TileLayer, Marker, Circle, Popup, useMap } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Circle, Popup, useMap, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
 import { useAppState } from '../state/AppState'
 import {
@@ -17,7 +17,7 @@ import DispatchIntelligence from '../components/ui/DispatchIntelligence'
 import { calculateRegionXAI } from '../data/xai'
 import type { Complaint, GeoPoint, Prediction, RiskLevel } from '../types'
 
-const CHENNAI_CENTER: GeoPoint = { lat: 13.03, lng: 80.21 }
+const INDIA_CENTER: GeoPoint = { lat: 21.7679, lng: 78.8718 }
 
 function dotIcon(color: string, size = 12) {
   return L.divIcon({
@@ -80,12 +80,6 @@ export function getRegionData(
       ? zoneComplaints.length
       : highRisk?.complaintCount && highRisk.complaintCount > 0
       ? highRisk.complaintCount
-      : zone.name.includes('Tambaram')
-      ? 8
-      : zone.name.includes('Chromepet')
-      ? 4
-      : zone.name.includes('Pallavaram')
-      ? 11
       : 1
 
   let riskPercent = 18
@@ -157,13 +151,53 @@ export function getRegionData(
   }
 }
 
-function FocusHandler({ focus }: { focus: { location: GeoPoint; label: string } | null }) {
+function MapClickHandler({ onSelectZone }: { onSelectZone: (zoneId: string) => void }) {
+  useMapEvents({
+    click(e) {
+      const clickedLat = e.latlng.lat
+      const clickedLng = e.latlng.lng
+
+      let minDistance = Infinity
+      let closestZone = ZONES[0]
+
+      for (const z of ZONES) {
+        const dLat = z.center.lat - clickedLat
+        const dLng = z.center.lng - clickedLng
+        const dist = Math.sqrt(dLat * dLat + dLng * dLng)
+        if (dist < minDistance) {
+          minDistance = dist
+          closestZone = z
+        }
+      }
+
+      if (closestZone) {
+        onSelectZone(closestZone.id)
+      }
+    },
+  })
+  return null
+}
+
+function FocusHandler({
+  focus,
+  selectedCenter,
+}: {
+  focus: { location: GeoPoint; label: string } | null
+  selectedCenter?: GeoPoint
+}) {
   const map = useMap()
   useEffect(() => {
     if (focus) {
-      map.flyTo([focus.location.lat, focus.location.lng], 15, { duration: 0.8 })
+      map.flyTo([focus.location.lat, focus.location.lng], 13, { duration: 0.8 })
     }
   }, [focus, map])
+
+  useEffect(() => {
+    if (selectedCenter && !focus) {
+      map.flyTo([selectedCenter.lat, selectedCenter.lng], 11, { duration: 0.8 })
+    }
+  }, [selectedCenter, focus, map])
+
   return null
 }
 
@@ -226,8 +260,8 @@ export default function GisMap() {
   return (
     <div className="space-y-7">
       <div>
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#000000]">GIS Map</h1>
-        <p className="text-base text-[#222222] font-medium mt-1">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#000000]">GIS Map</h1>
+        <p className="text-sm sm:text-base text-[#222222] font-medium mt-1">
           Interactive geospatial view of complaints, historical risk, predictions and cash-out infrastructure.
         </p>
       </div>
@@ -236,12 +270,13 @@ export default function GisMap() {
         <div className="lg:col-span-3">
           <Panel className="overflow-hidden">
             <div className="h-[70vh] max-h-[420px] sm:max-h-[520px] lg:h-[600px] lg:max-h-none relative">
-              <MapContainer center={[CHENNAI_CENTER.lat, CHENNAI_CENTER.lng]} zoom={12} style={{ height: '100%', width: '100%' }}>
+              <MapContainer center={[INDIA_CENTER.lat, INDIA_CENTER.lng]} zoom={5} style={{ height: '100%', width: '100%' }}>
                 <TileLayer
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 />
-                <FocusHandler focus={mapFocus} />
+                <MapClickHandler onSelectZone={(id) => setSelectedRegionId(id)} />
+                <FocusHandler focus={mapFocus} selectedCenter={selectedRegionData?.center} />
 
                 {/* Highlight ring around selected region */}
                 {selectedRegionData && (

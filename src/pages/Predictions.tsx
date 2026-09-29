@@ -148,8 +148,8 @@ export default function Predictions() {
     <div className="space-y-7">
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#000000]">Predictive Analysis</h1>
-          <p className="text-base text-[#222222] font-medium mt-1">Run the prediction model against {c.id} to forecast the likely cash-out zone.</p>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#000000]">Predictive Analysis</h1>
+          <p className="text-sm sm:text-base text-[#222222] font-medium mt-1">Run the prediction model against {c.id} to forecast the likely cash-out zone.</p>
         </div>
         <ComplaintPicker />
       </div>

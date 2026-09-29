@@ -74,9 +74,9 @@ export function Metric({ label, value, tone = 'default' }: { label: string; valu
     intel: 'text-[#102B3F]',
   }[tone]
   return (
-    <div className="bg-[#FFFFFF] border border-[#D6D6D0] rounded-md px-5 py-4 shadow-sm">
+    <div className="bg-[#FFFFFF] border border-[#D6D6D0] rounded-md px-4 py-3.5 sm:px-5 sm:py-4 shadow-sm">
       <div className="text-xs sm:text-sm font-semibold text-[#222222] mb-1">{label}</div>
-      <div className={`text-2xl sm:text-[30px] font-bold mono ${toneClass}`}>{value}</div>
+      <div className={`text-2xl sm:text-3xl font-bold mono ${toneClass}`}>{value}</div>
     </div>
   )
 }

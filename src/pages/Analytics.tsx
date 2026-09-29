@@ -76,8 +76,8 @@ export default function Analytics() {
   return (
     <div className="space-y-7">
       <div>
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#000000]">Analytics</h1>
-        <p className="text-base text-[#222222] font-medium mt-1">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#000000]">Analytics</h1>
+        <p className="text-sm sm:text-base text-[#222222] font-medium mt-1">
           Every figure below is computed live from the {total} complaint record{total === 1 ? '' : 's'} and {Object.keys(predictions).length} generated prediction
           {Object.keys(predictions).length === 1 ? '' : 's'} currently held in application state — the same records shown on the Dashboard and Complaints pages.
         </p>

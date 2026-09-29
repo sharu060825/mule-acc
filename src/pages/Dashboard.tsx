@@ -42,8 +42,8 @@ export default function Dashboard() {
   return (
     <div className="space-y-7">
       <div>
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#000000]">Operational Dashboard</h1>
-        <p className="text-base text-[#222222] font-medium mt-1">Live intelligence overview across active cybercrime complaints and predicted cash-out activity.</p>
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#000000]">Operational Dashboard</h1>
+        <p className="text-sm sm:text-base text-[#222222] font-medium mt-1">Live intelligence overview across active cybercrime complaints and predicted cash-out activity.</p>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">

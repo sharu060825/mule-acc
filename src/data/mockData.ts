@@ -42,6 +42,21 @@ export const ZONES: ZoneDef[] = [
   { id: 'ZONE-12', name: 'Ambattur', city: 'Chennai', center: { lat: 13.1143, lng: 80.1548 } },
   { id: 'ZONE-13', name: 'Chromepet', city: 'Chennai', center: { lat: 12.9516, lng: 80.1462 } },
   { id: 'ZONE-14', name: 'Pallavaram', city: 'Chennai', center: { lat: 12.9675, lng: 80.1491 } },
+  { id: 'ZONE-15', name: 'Indiranagar', city: 'Bengaluru', center: { lat: 12.9716, lng: 77.5946 } },
+  { id: 'ZONE-16', name: 'Bandra-Kurla Complex', city: 'Mumbai', center: { lat: 19.0657, lng: 72.8680 } },
+  { id: 'ZONE-17', name: 'Connaught Place', city: 'Delhi', center: { lat: 28.6304, lng: 77.2177 } },
+  { id: 'ZONE-18', name: 'Salt Lake Sector V', city: 'Kolkata', center: { lat: 22.5726, lng: 88.4331 } },
+  { id: 'ZONE-19', name: 'HITECH City', city: 'Hyderabad', center: { lat: 17.4435, lng: 78.3772 } },
+  { id: 'ZONE-20', name: 'SG Highway', city: 'Ahmedabad', center: { lat: 23.0225, lng: 72.5714 } },
+  { id: 'ZONE-21', name: 'Hinjewadi Tech Park', city: 'Pune', center: { lat: 18.5912, lng: 73.7389 } },
+  { id: 'ZONE-22', name: 'Pink City Centre', city: 'Jaipur', center: { lat: 26.9124, lng: 75.7873 } },
+  { id: 'ZONE-23', name: 'Hazratganj District', city: 'Lucknow', center: { lat: 26.8467, lng: 80.9462 } },
+  { id: 'ZONE-24', name: 'MG Road Marine Hub', city: 'Kochi', center: { lat: 9.9312, lng: 76.2673 } },
+  { id: 'ZONE-25', name: 'MP Nagar Hub', city: 'Bhopal', center: { lat: 23.2599, lng: 77.4126 } },
+  { id: 'ZONE-26', name: 'Kankarbagh Corridor', city: 'Patna', center: { lat: 25.5941, lng: 85.1376 } },
+  { id: 'ZONE-27', name: 'Saheed Nagar District', city: 'Bhubaneswar', center: { lat: 20.2961, lng: 85.8245 } },
+  { id: 'ZONE-28', name: 'Sector 17 City Centre', city: 'Chandigarh', center: { lat: 30.7333, lng: 76.7794 } },
+  { id: 'ZONE-29', name: 'GS Road Hub', city: 'Guwahati', center: { lat: 26.1445, lng: 91.7362 } },
 ]
 
 export function zoneById(id: string): ZoneDef {
