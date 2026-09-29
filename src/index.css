@@ -4,27 +4,33 @@
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
 
-  --color-ink: #05070a;
-  --color-panel: #0c1017;
-  --color-panel-raised: #12171f;
-  --color-line: #1f2833;
-  --color-line-soft: #171d26;
+  /* Surfaces — darkest to elevated, per the navy/blue-gray reference palette */
+  --color-ink: #071A2B;
+  --color-panel: #0D263D;
+  --color-panel-raised: #173550;
+  --color-line: rgba(102, 127, 150, 0.35);
+  --color-line-soft: rgba(70, 98, 123, 0.28);
 
-  --color-paper: #e8ecf1;
-  --color-paper-dim: #8b96a5;
-  --color-paper-faint: #5b6572;
+  /* Typography on dark surfaces */
+  --color-paper: #F2F6F8;
+  --color-paper-dim: #AEBCC8;
+  --color-paper-faint: #8FA4B8;
 
-  --color-intel-500: #3b82f6;
-  --color-intel-400: #5b9bf9;
-  --color-intel-600: #2563eb;
+  /* Primary interactive accent — slate/medium blue-gray, one step lighter on hover */
+  --color-intel-600: #294761;
+  --color-intel-500: #46627B;
+  --color-intel-400: #667F96;
+  --color-intel-300: #8FA4B8;
 
-  --color-critical-500: #ef4444;
-  --color-critical-400: #f87171;
-  --color-warn-500: #f59e0b;
-  --color-warn-400: #fbbf24;
+  /* Status accents — muted, desaturated so they read as "restrained" rather than neon,
+     while staying hue-distinct (red / amber / green) so meaning is preserved */
+  --color-critical-500: #C4544B;
+  --color-critical-400: #DE8177;
+  --color-warn-500: #C99A4A;
+  --color-warn-400: #DAB579;
 
-  --color-ok-500: #22c55e;
-  --color-ok-400: #4ade80;
+  --color-ok-500: #5FA37D;
+  --color-ok-400: #82BFA0;
 }
 
 html, body, #root {
@@ -40,12 +46,12 @@ body {
 
 ::selection {
   background: var(--color-intel-600);
-  color: white;
+  color: var(--color-paper);
 }
 
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: var(--color-ink); }
-::-webkit-scrollbar-thumb { background: var(--color-line); border-radius: 6px; }
+::-webkit-scrollbar-thumb { background: var(--color-intel-500); border-radius: 6px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-paper-faint); }
 
 .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }

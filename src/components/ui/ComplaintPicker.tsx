@@ -10,7 +10,7 @@ export default function ComplaintPicker() {
       <select
         value={selectedComplaintId}
         onChange={(e) => selectComplaint(e.target.value)}
-        className="w-full sm:w-auto bg-panel border border-line rounded-md px-3 py-2.5 sm:py-2 text-sm mono text-paper focus:outline-none focus:border-intel-500"
+        className="w-full sm:w-auto bg-panel border border-line rounded-md px-3 py-2.5 sm:py-2 text-sm mono text-paper focus:outline-none focus:border-paper-faint"
       >
         {complaints.map((c) => (
           <option key={c.id} value={c.id}>

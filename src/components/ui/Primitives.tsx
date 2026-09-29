@@ -99,9 +99,9 @@ export function Button({
 }) {
   const base = 'inline-flex items-center justify-center gap-2 rounded px-4 py-2.5 sm:py-2 min-h-[42px] sm:min-h-0 text-sm font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed'
   const styles = {
-    primary: 'bg-intel-600 text-white hover:bg-intel-500',
+    primary: 'bg-intel-600 text-paper hover:bg-intel-500',
     secondary: 'bg-panel-raised text-paper border border-line hover:border-paper-faint',
-    critical: 'bg-critical-500 text-white hover:bg-critical-400',
+    critical: 'bg-critical-500 text-paper hover:bg-critical-400',
     ghost: 'text-paper-dim hover:text-paper hover:bg-panel-raised',
   }[variant]
   return (

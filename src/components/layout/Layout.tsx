@@ -28,7 +28,7 @@ function Brand() {
   return (
     <div className="flex items-center gap-2.5">
       <div className="w-8 h-8 rounded bg-intel-600 flex items-center justify-center shrink-0">
-        <ShieldAlert size={17} className="text-white" strokeWidth={2.2} />
+        <ShieldAlert size={17} className="text-paper" strokeWidth={2.2} />
       </div>
       <div>
         <div className="text-sm font-semibold tracking-tight leading-none">CyBlock</div>

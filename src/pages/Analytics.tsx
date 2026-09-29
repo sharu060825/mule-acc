@@ -33,15 +33,15 @@ import {
 } from '../data/analytics'
 import { Panel, PanelHeader, EmptyState } from '../components/ui/Primitives'
 
-const COLORS = ['#3b82f6', '#ef4444', '#f59e0b', '#22c55e', '#a78bfa', '#5b9bf9']
-const RISK_COLORS: Record<string, string> = { CRITICAL: '#ef4444', HIGH: '#f87171', MEDIUM: '#f59e0b', LOW: '#22c55e' }
+const COLORS = ['#8FA4B8', '#667F96', '#46627B', '#C4D0DA', '#294761', '#AEBCC8']
+const RISK_COLORS: Record<string, string> = { CRITICAL: '#C4544B', HIGH: '#DE8177', MEDIUM: '#C99A4A', LOW: '#5FA37D' }
 
 const TOOLTIP_STYLE = {
-  background: '#0c1017',
-  border: '1px solid #1f2833',
+  background: '#173550',
+  border: '1px solid rgba(102, 127, 150, 0.4)',
   borderRadius: 6,
   fontSize: 12,
-  color: '#e8ecf1',
+  color: '#F2F6F8',
 }
 
 function SourceNote({ children }: { children: React.ReactNode }) {
@@ -87,11 +87,11 @@ export default function Analytics() {
           <div className="px-4 sm:px-5 py-4 h-56 sm:h-64">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={byDate}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#171d26" />
-                <XAxis dataKey="label" stroke="#5b6572" fontSize={11} />
-                <YAxis stroke="#5b6572" fontSize={11} allowDecimals={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#46627B" strokeOpacity={0.3} />
+                <XAxis dataKey="label" stroke="#AEBCC8" fontSize={11} />
+                <YAxis stroke="#AEBCC8" fontSize={11} allowDecimals={false} />
                 <Tooltip contentStyle={TOOLTIP_STYLE} />
-                <Line type="monotone" dataKey="count" stroke="#3b82f6" strokeWidth={2} dot={{ r: 3 }} />
+                <Line type="monotone" dataKey="count" stroke="#8FA4B8" strokeWidth={2} dot={{ r: 3 }} />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -103,11 +103,11 @@ export default function Analytics() {
           <div className="px-4 sm:px-5 py-4 h-56 sm:h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={byHour}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#171d26" />
-                <XAxis dataKey="label" stroke="#5b6572" fontSize={10} interval={0} angle={-45} textAnchor="end" height={50} />
-                <YAxis stroke="#5b6572" fontSize={11} allowDecimals={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#46627B" strokeOpacity={0.3} />
+                <XAxis dataKey="label" stroke="#AEBCC8" fontSize={10} interval={0} angle={-45} textAnchor="end" height={50} />
+                <YAxis stroke="#AEBCC8" fontSize={11} allowDecimals={false} />
                 <Tooltip contentStyle={TOOLTIP_STYLE} />
-                <Bar dataKey="count" fill="#5b9bf9" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="count" fill="#667F96" radius={[3, 3, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -119,7 +119,7 @@ export default function Analytics() {
           <div className="px-4 sm:px-5 py-4 h-56 sm:h-64 flex items-center">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Pie data={fraudTypes} dataKey="count" nameKey="label" cx="50%" cy="50%" outerRadius={80} label={{ fontSize: 11, fill: '#8b96a5' }}>
+                <Pie data={fraudTypes} dataKey="count" nameKey="label" cx="50%" cy="50%" outerRadius={80} label={{ fontSize: 11, fill: '#AEBCC8' }}>
                   {fraudTypes.map((_, i) => (
                     <Cell key={i} fill={COLORS[i % COLORS.length]} />
                   ))}
@@ -136,13 +136,13 @@ export default function Analytics() {
           <div className="px-4 sm:px-5 py-4 h-56 sm:h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={riskDistribution}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#171d26" />
-                <XAxis dataKey="label" stroke="#5b6572" fontSize={11} />
-                <YAxis stroke="#5b6572" fontSize={11} allowDecimals={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#46627B" strokeOpacity={0.3} />
+                <XAxis dataKey="label" stroke="#AEBCC8" fontSize={11} />
+                <YAxis stroke="#AEBCC8" fontSize={11} allowDecimals={false} />
                 <Tooltip contentStyle={TOOLTIP_STYLE} />
                 <Bar dataKey="count" radius={[3, 3, 0, 0]}>
                   {riskDistribution.map((d, i) => (
-                    <Cell key={i} fill={RISK_COLORS[d.label] ?? '#3b82f6'} />
+                    <Cell key={i} fill={RISK_COLORS[d.label] ?? '#8FA4B8'} />
                   ))}
                 </Bar>
               </BarChart>
@@ -156,11 +156,11 @@ export default function Analytics() {
           <div className="px-4 sm:px-5 py-4 h-56 sm:h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={amountDistribution}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#171d26" />
-                <XAxis dataKey="label" stroke="#5b6572" fontSize={11} />
-                <YAxis stroke="#5b6572" fontSize={11} allowDecimals={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#46627B" strokeOpacity={0.3} />
+                <XAxis dataKey="label" stroke="#AEBCC8" fontSize={11} />
+                <YAxis stroke="#AEBCC8" fontSize={11} allowDecimals={false} />
                 <Tooltip contentStyle={TOOLTIP_STYLE} />
-                <Bar dataKey="count" fill="#3b82f6" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="count" fill="#8FA4B8" radius={[3, 3, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -172,11 +172,11 @@ export default function Analytics() {
           <div className="px-4 sm:px-5 py-4 h-56 sm:h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={bankDistribution} layout="vertical" margin={{ left: 20 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#171d26" />
-                <XAxis type="number" stroke="#5b6572" fontSize={11} allowDecimals={false} />
-                <YAxis dataKey="label" type="category" stroke="#5b6572" fontSize={10} width={110} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#46627B" strokeOpacity={0.3} />
+                <XAxis type="number" stroke="#AEBCC8" fontSize={11} allowDecimals={false} />
+                <YAxis dataKey="label" type="category" stroke="#AEBCC8" fontSize={10} width={110} />
                 <Tooltip contentStyle={TOOLTIP_STYLE} />
-                <Bar dataKey="count" fill="#22c55e" radius={[0, 3, 3, 0]} />
+                <Bar dataKey="count" fill="#46627B" radius={[0, 3, 3, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -188,11 +188,11 @@ export default function Analytics() {
           <div className="px-4 sm:px-5 py-4 h-56 sm:h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={zoneDistribution} layout="vertical" margin={{ left: 20 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#171d26" />
-                <XAxis type="number" stroke="#5b6572" fontSize={11} allowDecimals={false} />
-                <YAxis dataKey="label" type="category" stroke="#5b6572" fontSize={10} width={90} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#46627B" strokeOpacity={0.3} />
+                <XAxis type="number" stroke="#AEBCC8" fontSize={11} allowDecimals={false} />
+                <YAxis dataKey="label" type="category" stroke="#AEBCC8" fontSize={10} width={90} />
                 <Tooltip contentStyle={TOOLTIP_STYLE} />
-                <Bar dataKey="count" fill="#f59e0b" radius={[0, 3, 3, 0]} />
+                <Bar dataKey="count" fill="#667F96" radius={[0, 3, 3, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -206,11 +206,11 @@ export default function Analytics() {
               <div className="px-4 sm:px-5 py-4 h-56 sm:h-64">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={predictedZones} layout="vertical" margin={{ left: 20 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#171d26" />
-                    <XAxis type="number" stroke="#5b6572" fontSize={11} allowDecimals={false} />
-                    <YAxis dataKey="label" type="category" stroke="#5b6572" fontSize={10} width={90} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#46627B" strokeOpacity={0.3} />
+                    <XAxis type="number" stroke="#AEBCC8" fontSize={11} allowDecimals={false} />
+                    <YAxis dataKey="label" type="category" stroke="#AEBCC8" fontSize={10} width={90} />
                     <Tooltip contentStyle={TOOLTIP_STYLE} />
-                    <Bar dataKey="count" fill="#ef4444" radius={[0, 3, 3, 0]} />
+                    <Bar dataKey="count" fill="#C4D0DA" radius={[0, 3, 3, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -228,11 +228,11 @@ export default function Analytics() {
           <div className="px-4 sm:px-5 py-4 h-56 sm:h-64">
             <ResponsiveContainer width="100%" height="100%">
               <ScatterChart>
-                <CartesianGrid strokeDasharray="3 3" stroke="#171d26" />
-                <XAxis dataKey="velocity" name="Velocity (tx/hr)" stroke="#5b6572" fontSize={11} />
-                <YAxis dataKey="destinations" name="Destinations" stroke="#5b6572" fontSize={11} allowDecimals={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#46627B" strokeOpacity={0.3} />
+                <XAxis dataKey="velocity" name="Velocity (tx/hr)" stroke="#AEBCC8" fontSize={11} />
+                <YAxis dataKey="destinations" name="Destinations" stroke="#AEBCC8" fontSize={11} allowDecimals={false} />
                 <Tooltip contentStyle={TOOLTIP_STYLE} cursor={{ strokeDasharray: '3 3' }} />
-                <Scatter data={velocityPoints} fill="#3b82f6" />
+                <Scatter data={velocityPoints} fill="#8FA4B8" />
               </ScatterChart>
             </ResponsiveContainer>
           </div>
@@ -249,11 +249,11 @@ export default function Analytics() {
               <div className="px-4 sm:px-5 py-4 h-56 sm:h-64">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={timeToWithdrawal}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#171d26" />
-                    <XAxis dataKey="id" stroke="#5b6572" fontSize={10} />
-                    <YAxis stroke="#5b6572" fontSize={11} label={{ value: 'minutes', angle: -90, position: 'insideLeft', fontSize: 10, fill: '#5b6572' }} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#46627B" strokeOpacity={0.3} />
+                    <XAxis dataKey="id" stroke="#AEBCC8" fontSize={10} />
+                    <YAxis stroke="#AEBCC8" fontSize={11} label={{ value: 'minutes', angle: -90, position: 'insideLeft', fontSize: 10, fill: '#AEBCC8' }} />
                     <Tooltip contentStyle={TOOLTIP_STYLE} />
-                    <Bar dataKey="minutes" fill="#a78bfa" radius={[3, 3, 0, 0]} />
+                    <Bar dataKey="minutes" fill="#46627B" radius={[3, 3, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -273,13 +273,13 @@ export default function Analytics() {
               <div className="px-4 sm:px-5 py-4 h-56 sm:h-64">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={confidencePoints}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#171d26" />
-                    <XAxis dataKey="id" stroke="#5b6572" fontSize={10} />
-                    <YAxis stroke="#5b6572" fontSize={11} domain={[0, 100]} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#46627B" strokeOpacity={0.3} />
+                    <XAxis dataKey="id" stroke="#AEBCC8" fontSize={10} />
+                    <YAxis stroke="#AEBCC8" fontSize={11} domain={[0, 100]} />
                     <Tooltip contentStyle={TOOLTIP_STYLE} />
                     <Bar dataKey="confidence" radius={[3, 3, 0, 0]}>
                       {confidencePoints.map((p, i) => (
-                        <Cell key={i} fill={RISK_COLORS[p.risk] ?? '#3b82f6'} />
+                        <Cell key={i} fill={RISK_COLORS[p.risk] ?? '#8FA4B8'} />
                       ))}
                     </Bar>
                   </BarChart>
@@ -299,9 +299,9 @@ export default function Analytics() {
           <div className="px-4 sm:px-5 py-4 h-56 sm:h-64 flex items-center">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Pie data={atmDensity} dataKey="count" nameKey="label" cx="50%" cy="50%" outerRadius={80} label={{ fontSize: 11, fill: '#8b96a5' }}>
+                <Pie data={atmDensity} dataKey="count" nameKey="label" cx="50%" cy="50%" outerRadius={80} label={{ fontSize: 11, fill: '#AEBCC8' }}>
                   {atmDensity.map((entry, i) => (
-                    <Cell key={i} fill={entry.label === 'HIGH' ? '#ef4444' : entry.label === 'MEDIUM' ? '#f59e0b' : '#22c55e'} />
+                    <Cell key={i} fill={entry.label === 'HIGH' ? '#C4544B' : entry.label === 'MEDIUM' ? '#C99A4A' : '#5FA37D'} />
                   ))}
                 </Pie>
                 <Tooltip contentStyle={TOOLTIP_STYLE} />

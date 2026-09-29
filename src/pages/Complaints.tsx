@@ -69,23 +69,23 @@ export default function Complaints() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search by ID, fraud type, zone or bank"
-            className="w-full bg-panel border border-line rounded-md pl-9 pr-3 py-2 text-sm text-paper placeholder:text-paper-faint focus:outline-none focus:border-intel-500"
+            className="w-full bg-panel border border-line rounded-md pl-9 pr-3 py-2 text-sm text-paper placeholder:text-paper-faint focus:outline-none focus:border-paper-faint"
           />
         </div>
         <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-3">
-          <select value={fraudFilter} onChange={(e) => setFraudFilter(e.target.value)} className="bg-panel border border-line rounded-md px-3 py-2.5 sm:py-2 text-sm text-paper-dim focus:outline-none focus:border-intel-500">
+          <select value={fraudFilter} onChange={(e) => setFraudFilter(e.target.value)} className="bg-panel border border-line rounded-md px-3 py-2.5 sm:py-2 text-sm text-paper-dim focus:outline-none focus:border-paper-faint">
             <option value="ALL">All fraud types</option>
             {ALL_FRAUD_TYPES.map((f) => <option key={f} value={f}>{f}</option>)}
           </select>
-          <select value={riskFilter} onChange={(e) => setRiskFilter(e.target.value)} className="bg-panel border border-line rounded-md px-3 py-2.5 sm:py-2 text-sm text-paper-dim focus:outline-none focus:border-intel-500">
+          <select value={riskFilter} onChange={(e) => setRiskFilter(e.target.value)} className="bg-panel border border-line rounded-md px-3 py-2.5 sm:py-2 text-sm text-paper-dim focus:outline-none focus:border-paper-faint">
             <option value="ALL">All risk levels</option>
             {risks.map((r) => <option key={r} value={r}>{r}</option>)}
           </select>
-          <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="bg-panel border border-line rounded-md px-3 py-2.5 sm:py-2 text-sm text-paper-dim focus:outline-none focus:border-intel-500">
+          <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="bg-panel border border-line rounded-md px-3 py-2.5 sm:py-2 text-sm text-paper-dim focus:outline-none focus:border-paper-faint">
             <option value="ALL">All statuses</option>
             {statuses.map((s) => <option key={s} value={s}>{s}</option>)}
           </select>
-          <select value={sort} onChange={(e) => setSort(e.target.value as SortKey)} className="bg-panel border border-line rounded-md px-3 py-2.5 sm:py-2 text-sm text-paper-dim focus:outline-none focus:border-intel-500">
+          <select value={sort} onChange={(e) => setSort(e.target.value as SortKey)} className="bg-panel border border-line rounded-md px-3 py-2.5 sm:py-2 text-sm text-paper-dim focus:outline-none focus:border-paper-faint">
             <option value="newest">Newest first</option>
             <option value="amount-desc">Amount: high to low</option>
             <option value="amount-asc">Amount: low to high</option>

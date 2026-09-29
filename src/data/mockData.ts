@@ -40,6 +40,8 @@ export const ZONES: ZoneDef[] = [
   { id: 'ZONE-10', name: 'Egmore', city: 'Chennai', center: { lat: 13.0732, lng: 80.2609 } },
   { id: 'ZONE-11', name: 'Perambur', city: 'Chennai', center: { lat: 13.1143, lng: 80.2329 } },
   { id: 'ZONE-12', name: 'Ambattur', city: 'Chennai', center: { lat: 13.1143, lng: 80.1548 } },
+  { id: 'ZONE-13', name: 'Chromepet', city: 'Chennai', center: { lat: 12.9516, lng: 80.1462 } },
+  { id: 'ZONE-14', name: 'Pallavaram', city: 'Chennai', center: { lat: 12.9675, lng: 80.1491 } },
 ]
 
 export function zoneById(id: string): ZoneDef {
