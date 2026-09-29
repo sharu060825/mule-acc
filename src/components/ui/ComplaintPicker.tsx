@@ -10,7 +10,7 @@ export default function ComplaintPicker() {
       <select
         value={selectedComplaintId}
         onChange={(e) => selectComplaint(e.target.value)}
-        className="w-full sm:w-auto bg-panel border border-line rounded-md px-3 py-2.5 sm:py-2 text-sm mono text-paper focus:outline-none focus:border-paper-faint"
+        className="w-full sm:w-auto bg-[#FFFFFF] border border-[#D6D6D0] rounded-md px-3.5 py-2 text-[15px] font-semibold mono text-[#111111] focus:outline-none focus:border-[#1F4057] shadow-sm"
       >
         {complaints.map((c) => (
           <option key={c.id} value={c.id}>
@@ -19,11 +19,12 @@ export default function ComplaintPicker() {
         ))}
       </select>
       {selectedComplaint && (
-        <>
+        <div className="flex items-center gap-2">
           <RiskBadge risk={selectedComplaint.risk} />
           <StatusBadge status={selectedComplaint.status} />
-        </>
+        </div>
       )}
     </div>
   )
 }
+

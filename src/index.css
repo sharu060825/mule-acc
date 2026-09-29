@@ -4,59 +4,54 @@
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
 
-  /* Surfaces — darkest to elevated, per the navy/blue-gray reference palette */
-  --color-ink: #071A2B;
-  --color-panel: #0D263D;
-  --color-panel-raised: #173550;
-  --color-line: rgba(102, 127, 150, 0.35);
-  --color-line-soft: rgba(70, 98, 123, 0.28);
+  /* Flat palette for Cybercrime Intel platform */
+  --color-ink: #F7F7F5;
+  --color-panel: #FFFFFF;
+  --color-panel-raised: #F0F0EC;
+  --color-beige: #E8E3D8;
+  --color-line: #D6D6D0;
+  --color-line-soft: #D6D6D0;
 
-  /* Typography on dark surfaces */
-  --color-paper: #F2F6F8;
-  --color-paper-dim: #AEBCC8;
-  --color-paper-faint: #8FA4B8;
+  --color-paper: #111111;
+  --color-paper-dim: #222222;
+  --color-paper-faint: #222222;
 
-  /* Primary interactive accent — slate/medium blue-gray, one step lighter on hover */
-  --color-intel-600: #294761;
-  --color-intel-500: #46627B;
-  --color-intel-400: #667F96;
-  --color-intel-300: #8FA4B8;
+  --color-intel-600: #102B3F;
+  --color-intel-500: #1F4057;
+  --color-intel-400: #1F4057;
+  --color-intel-300: #DCE5EA;
 
-  /* Status accents — muted, desaturated so they read as "restrained" rather than neon,
-     while staying hue-distinct (red / amber / green) so meaning is preserved */
-  --color-critical-500: #C4544B;
-  --color-critical-400: #DE8177;
-  --color-warn-500: #C99A4A;
-  --color-warn-400: #DAB579;
+  --color-critical-500: #991B1B;
+  --color-critical-400: #B91C1C;
+  --color-warn-500: #92400E;
+  --color-warn-400: #B45309;
 
-  --color-ok-500: #5FA37D;
-  --color-ok-400: #82BFA0;
+  --color-ok-500: #166534;
+  --color-ok-400: #15803D;
 }
 
 html, body, #root {
   height: 100%;
-}
-
-body {
-  background-color: var(--color-ink);
-  color: var(--color-paper);
+  background-color: #F7F7F5;
+  color: #111111;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-  background: var(--color-intel-600);
-  color: var(--color-paper);
+  background: #1F4057;
+  color: #FFFFFF;
 }
 
-::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background: var(--color-ink); }
-::-webkit-scrollbar-thumb { background: var(--color-intel-500); border-radius: 6px; }
-::-webkit-scrollbar-thumb:hover { background: var(--color-paper-faint); }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: #F7F7F5; }
+::-webkit-scrollbar-thumb { background: #D6D6D0; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #1F4057; }
 
 .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 
 .leaflet-container {
-  background: var(--color-panel) !important;
+  background: #F0F0EC !important;
   font-family: var(--font-sans);
 }
+

@@ -56,36 +56,36 @@ export default function Complaints() {
   const risks: RiskLevel[] = ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW']
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-7">
       <div>
-        <h1 className="text-xl font-medium tracking-tight">Complaints</h1>
-        <p className="text-sm text-paper-faint mt-1">{filtered.length} of {complaints.length} complaints shown</p>
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#000000]">Complaints</h1>
+        <p className="text-base text-[#222222] font-medium mt-1">{filtered.length} of {complaints.length} complaints shown</p>
       </div>
 
       <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3">
-        <div className="relative flex-1 min-w-0 sm:min-w-[220px]">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-paper-faint" />
+        <div className="relative flex-1 min-w-0 sm:min-w-[240px]">
+          <Search size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#222222]" />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search by ID, fraud type, zone or bank"
-            className="w-full bg-panel border border-line rounded-md pl-9 pr-3 py-2 text-sm text-paper placeholder:text-paper-faint focus:outline-none focus:border-paper-faint"
+            className="w-full bg-[#FFFFFF] border border-[#D6D6D0] rounded-md pl-10 pr-3.5 py-2.5 text-[15px] font-medium text-[#111111] placeholder:text-[#222222] focus:outline-none focus:border-[#1F4057] shadow-sm"
           />
         </div>
         <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-3">
-          <select value={fraudFilter} onChange={(e) => setFraudFilter(e.target.value)} className="bg-panel border border-line rounded-md px-3 py-2.5 sm:py-2 text-sm text-paper-dim focus:outline-none focus:border-paper-faint">
+          <select value={fraudFilter} onChange={(e) => setFraudFilter(e.target.value)} className="bg-[#FFFFFF] border border-[#D6D6D0] rounded-md px-3.5 py-2.5 text-[15px] font-medium text-[#111111] focus:outline-none focus:border-[#1F4057] shadow-sm">
             <option value="ALL">All fraud types</option>
             {ALL_FRAUD_TYPES.map((f) => <option key={f} value={f}>{f}</option>)}
           </select>
-          <select value={riskFilter} onChange={(e) => setRiskFilter(e.target.value)} className="bg-panel border border-line rounded-md px-3 py-2.5 sm:py-2 text-sm text-paper-dim focus:outline-none focus:border-paper-faint">
+          <select value={riskFilter} onChange={(e) => setRiskFilter(e.target.value)} className="bg-[#FFFFFF] border border-[#D6D6D0] rounded-md px-3.5 py-2.5 text-[15px] font-medium text-[#111111] focus:outline-none focus:border-[#1F4057] shadow-sm">
             <option value="ALL">All risk levels</option>
             {risks.map((r) => <option key={r} value={r}>{r}</option>)}
           </select>
-          <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="bg-panel border border-line rounded-md px-3 py-2.5 sm:py-2 text-sm text-paper-dim focus:outline-none focus:border-paper-faint">
+          <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="bg-[#FFFFFF] border border-[#D6D6D0] rounded-md px-3.5 py-2.5 text-[15px] font-medium text-[#111111] focus:outline-none focus:border-[#1F4057] shadow-sm">
             <option value="ALL">All statuses</option>
             {statuses.map((s) => <option key={s} value={s}>{s}</option>)}
           </select>
-          <select value={sort} onChange={(e) => setSort(e.target.value as SortKey)} className="bg-panel border border-line rounded-md px-3 py-2.5 sm:py-2 text-sm text-paper-dim focus:outline-none focus:border-paper-faint">
+          <select value={sort} onChange={(e) => setSort(e.target.value as SortKey)} className="bg-[#FFFFFF] border border-[#D6D6D0] rounded-md px-3.5 py-2.5 text-[15px] font-medium text-[#111111] focus:outline-none focus:border-[#1F4057] shadow-sm">
             <option value="newest">Newest first</option>
             <option value="amount-desc">Amount: high to low</option>
             <option value="amount-asc">Amount: low to high</option>
@@ -99,16 +99,16 @@ export default function Complaints() {
           <EmptyState title="No complaints match your filters" detail="Try clearing a filter or searching a different term." />
         ) : (
           <TableScroll>
-            <table className="w-full text-sm">
+            <table className="w-full text-[15px]">
               <thead>
-                <tr className="text-left text-xs text-paper-faint border-b border-line-soft">
-                  <th className="px-5 py-2.5 font-normal">Complaint ID</th>
-                  <th className="px-3 py-2.5 font-normal">Fraud Type</th>
-                  <th className="px-3 py-2.5 font-normal">Amount</th>
-                  <th className="px-3 py-2.5 font-normal">Victim Zone</th>
-                  <th className="px-3 py-2.5 font-normal">Bank</th>
-                  <th className="px-3 py-2.5 font-normal">Risk</th>
-                  <th className="px-5 py-2.5 font-normal">Status</th>
+                <tr className="text-left text-xs font-bold text-[#111111] uppercase tracking-wider bg-[#F0F0EC] border-b border-[#D6D6D0]">
+                  <th className="px-5 py-3">Complaint ID</th>
+                  <th className="px-3 py-3">Fraud Type</th>
+                  <th className="px-3 py-3">Amount</th>
+                  <th className="px-3 py-3">Victim Zone</th>
+                  <th className="px-3 py-3">Bank</th>
+                  <th className="px-3 py-3">Risk</th>
+                  <th className="px-5 py-3">Status</th>
                 </tr>
               </thead>
               <tbody>
@@ -116,15 +116,15 @@ export default function Complaints() {
                   <tr
                     key={c.id}
                     onClick={() => openComplaint(c.id)}
-                    className="border-b border-line-soft last:border-0 hover:bg-panel-raised cursor-pointer transition-colors"
+                    className="border-b border-[#D6D6D0] last:border-0 hover:bg-[#F0F0EC] cursor-pointer transition-colors"
                   >
-                    <td className="px-5 py-2.5 mono text-paper">{c.id}</td>
-                    <td className="px-3 py-2.5 text-paper-dim">{c.fraudType}</td>
-                    <td className="px-3 py-2.5 mono text-paper-dim">{formatINR(c.amount)}</td>
-                    <td className="px-3 py-2.5 text-paper-dim">{zoneById(c.victimZone).name}</td>
-                    <td className="px-3 py-2.5 text-paper-dim">{c.bank}</td>
-                    <td className="px-3 py-2.5"><RiskBadge risk={c.risk} /></td>
-                    <td className="px-5 py-2.5"><StatusBadge status={c.status} /></td>
+                    <td className="px-5 py-3.5 mono font-bold text-[#111111]">{c.id}</td>
+                    <td className="px-3 py-3.5 text-[#111111] font-medium">{c.fraudType}</td>
+                    <td className="px-3 py-3.5 mono text-[#111111] font-semibold">{formatINR(c.amount)}</td>
+                    <td className="px-3 py-3.5 text-[#111111] font-medium">{zoneById(c.victimZone).name}</td>
+                    <td className="px-3 py-3.5 text-[#111111] font-medium">{c.bank}</td>
+                    <td className="px-3 py-3.5"><RiskBadge risk={c.risk} /></td>
+                    <td className="px-5 py-3.5"><StatusBadge status={c.status} /></td>
                   </tr>
                 ))}
               </tbody>
@@ -135,3 +135,4 @@ export default function Complaints() {
     </div>
   )
 }
+

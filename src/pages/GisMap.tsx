@@ -12,26 +12,29 @@ import {
   zoneById,
 } from '../data/mockData'
 import { Panel, PanelHeader, RiskBadge, formatINR } from '../components/ui/Primitives'
+import XAIExplanation from '../components/ui/XAIExplanation'
+import DispatchIntelligence from '../components/ui/DispatchIntelligence'
+import { calculateRegionXAI } from '../data/xai'
 import type { Complaint, GeoPoint, Prediction, RiskLevel } from '../types'
 
 const CHENNAI_CENTER: GeoPoint = { lat: 13.03, lng: 80.21 }
 
-function dotIcon(color: string, size = 12, ring = false) {
+function dotIcon(color: string, size = 12) {
   return L.divIcon({
     className: '',
-    html: `<div style="width:${size}px;height:${size}px;border-radius:50%;background:${color};border:2px solid rgba(7,26,43,0.9);${ring ? 'box-shadow:0 0 0 3px ' + color + '55;' : ''}"></div>`,
+    html: `<div style="width:${size}px;height:${size}px;border-radius:50%;background:${color};border:2px solid #FFFFFF;box-shadow: 0 1px 3px rgba(0,0,0,0.25);"></div>`,
     iconSize: [size, size],
     iconAnchor: [size / 2, size / 2],
   })
 }
 
 const ICONS = {
-  complaint: dotIcon('#C99A4A'),
-  complaintCritical: dotIcon('#C4544B', 14, true),
-  atm: dotIcon('#8FA4B8', 9),
-  bank: dotIcon('#5FA37D', 10),
-  merchant: dotIcon('#C4D0DA', 9),
-  predicted: dotIcon('#C4544B', 16, true),
+  complaint: dotIcon('#1F4057', 12),
+  complaintCritical: dotIcon('#991B1B', 15),
+  atm: dotIcon('#102B3F', 10),
+  bank: dotIcon('#166534', 11),
+  merchant: dotIcon('#526B80', 10),
+  predicted: dotIcon('#991B1B', 16),
 }
 
 interface Layers {
@@ -67,59 +70,44 @@ export function getRegionData(
   const prediction = Object.values(predictions).find((p) => p.zone === zoneId)
   const zoneAtm = ATM_LOCATIONS.find((a) => a.zone === zoneId)
 
-  let location = 'ATM-142'
-  if (zone.name.includes('Tambaram')) {
-    location = 'ATM-142'
-  } else if (zone.name.includes('Chromepet')) {
-    location = 'ATM-014'
-  } else if (zone.name.includes('Pallavaram')) {
-    location = 'ATM-015'
-  } else if (zoneAtm) {
-    location = zoneAtm.id
-  } else {
-    location = `ATM-${zone.id.replace('ZONE-', '1')}`
+  let location = `ATM-${zone.id.replace('ZONE-', '1')}`
+  if (zoneAtm) {
+    location = `${zoneAtm.id} (${zoneAtm.name.split('—')[0].trim()})`
   }
 
   const linkedComplaints =
-    zone.name.includes('Tambaram')
+    zoneComplaints.length > 0
+      ? zoneComplaints.length
+      : highRisk?.complaintCount && highRisk.complaintCount > 0
+      ? highRisk.complaintCount
+      : zone.name.includes('Tambaram')
       ? 8
       : zone.name.includes('Chromepet')
       ? 4
       : zone.name.includes('Pallavaram')
       ? 11
-      : zoneComplaints.length > 0
-      ? zoneComplaints.length
-      : highRisk?.complaintCount && highRisk.complaintCount > 0
-      ? highRisk.complaintCount
-      : ((parseInt(zone.id.replace('ZONE-', '')) * 3) % 9) + 2
+      : 1
 
-  let riskPercent = 87
-  if (zone.name.includes('Tambaram')) {
-    riskPercent = 87
-  } else if (zone.name.includes('Chromepet')) {
-    riskPercent = 64
-  } else if (zone.name.includes('Pallavaram')) {
-    riskPercent = 42
-  } else if (prediction?.confidence) {
+  let riskPercent = 18
+  if (prediction?.confidence) {
     riskPercent = prediction.confidence
   } else if (highRisk) {
     const baseRisk = {
-      CRITICAL: 88,
-      HIGH: 76,
-      MEDIUM: 59,
-      LOW: 41,
+      CRITICAL: 87,
+      HIGH: 64,
+      MEDIUM: 42,
+      LOW: 18,
     }[highRisk.risk]
     riskPercent = Math.min(98, Math.max(15, baseRisk + (((parseInt(zone.id.replace('ZONE-', '')) * 5) % 7) - 3)))
+  } else if (zoneComplaints.length > 0) {
+    riskPercent = Math.min(95, 25 + zoneComplaints.length * 15)
   }
 
+  const riskLevel: RiskLevel =
+    riskPercent >= 75 ? 'CRITICAL' : riskPercent >= 55 ? 'HIGH' : riskPercent >= 35 ? 'MEDIUM' : 'LOW'
+
   let timeWindow = '18:30–20:00'
-  if (zone.name.includes('Tambaram')) {
-    timeWindow = '18:30–20:00'
-  } else if (zone.name.includes('Chromepet')) {
-    timeWindow = '19:15–20:30'
-  } else if (zone.name.includes('Pallavaram')) {
-    timeWindow = '17:00–18:30'
-  } else if (prediction?.windowStart && prediction?.windowEnd) {
+  if (prediction?.windowStart && prediction?.windowEnd) {
     timeWindow = `${prediction.windowStart}–${prediction.windowEnd}`
   } else {
     const foundWindow = zoneComplaints.find((c) => c.estimatedWithdrawal)?.estimatedWithdrawal
@@ -133,25 +121,23 @@ export function getRegionData(
     }
   }
 
-  let alertType = 'Potential withdrawal detected'
-  if (zone.name.includes('Tambaram') || prediction || highRisk?.risk === 'CRITICAL') {
+  let alertType = 'Geospatial risk monitoring'
+  if (riskLevel === 'CRITICAL') {
+    alertType = 'Critical cash-out threat'
+  } else if (riskLevel === 'HIGH') {
     alertType = 'Potential withdrawal detected'
-  } else if (zone.name.includes('Chromepet') || zoneComplaints.length >= 3) {
+  } else if (riskLevel === 'MEDIUM') {
     alertType = 'Suspicious transaction cluster'
-  } else if (zone.name.includes('Pallavaram') || highRisk?.risk === 'MEDIUM') {
-    alertType = 'Unusual activity detected'
-  } else if (highRisk?.risk === 'HIGH') {
-    alertType = 'Multiple complaints linked'
   } else {
     alertType = 'Geospatial risk monitoring'
   }
 
-  let actionRecommended = 'Increase monitoring / verify transaction'
-  if (zone.name.includes('Tambaram') || highRisk?.risk === 'CRITICAL' || prediction) {
-    actionRecommended = 'Increase monitoring / verify transaction'
-  } else if (zone.name.includes('Chromepet') || highRisk?.risk === 'HIGH') {
+  let actionRecommended = 'Routine geospatial surveillance and logging'
+  if (riskLevel === 'CRITICAL') {
+    actionRecommended = 'Increase monitoring / verify relevant activity & flag rapid disbursals'
+  } else if (riskLevel === 'HIGH') {
     actionRecommended = 'Deploy patrol unit & verify high-value transactions'
-  } else if (zone.name.includes('Pallavaram') || highRisk?.risk === 'MEDIUM') {
+  } else if (riskLevel === 'MEDIUM') {
     actionRecommended = 'Monitor cash withdrawal volume & flag rapid disbursals'
   } else {
     actionRecommended = 'Routine geospatial surveillance and logging'
@@ -163,7 +149,7 @@ export function getRegionData(
     location,
     timeWindow,
     risk: riskPercent,
-    riskLevel: highRisk?.risk ?? 'MEDIUM',
+    riskLevel,
     linkedComplaints,
     alertType,
     actionRecommended,
@@ -183,8 +169,8 @@ function FocusHandler({ focus }: { focus: { location: GeoPoint; label: string } 
 
 function LegendRow({ color, label }: { color: string; label: string }) {
   return (
-    <div className="flex items-center gap-2 text-xs text-paper-dim">
-      <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: color }} />
+    <div className="flex items-center gap-2.5 text-sm font-semibold text-[#111111]">
+      <span className="w-3 h-3 rounded-full shrink-0 border border-[#D6D6D0]" style={{ background: color }} />
       {label}
     </div>
   )
@@ -238,10 +224,10 @@ export default function GisMap() {
   }, [mapFocus, clearMapFocus])
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-7">
       <div>
-        <h1 className="text-xl font-medium tracking-tight">GIS Map</h1>
-        <p className="text-sm text-paper-faint mt-1">
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#000000]">GIS Map</h1>
+        <p className="text-base text-[#222222] font-medium mt-1">
           Interactive geospatial view of complaints, historical risk, predictions and cash-out infrastructure.
         </p>
       </div>
@@ -264,9 +250,9 @@ export default function GisMap() {
                     center={[selectedRegionData.center.lat, selectedRegionData.center.lng]}
                     radius={850}
                     pathOptions={{
-                      color: '#38BDF8',
-                      fillColor: '#38BDF8',
-                      fillOpacity: 0.22,
+                      color: '#1F4057',
+                      fillColor: '#1F4057',
+                      fillOpacity: 0.25,
                       weight: 3,
                     }}
                   />
@@ -281,10 +267,10 @@ export default function GisMap() {
                         center={[z.center.lat, z.center.lng]}
                         radius={500 + z.historicalActivity * 8}
                         pathOptions={{
-                          color: isSelected ? '#38BDF8' : z.risk === 'CRITICAL' || z.risk === 'HIGH' ? '#C4544B' : '#C99A4A',
-                          fillColor: isSelected ? '#38BDF8' : z.risk === 'CRITICAL' || z.risk === 'HIGH' ? '#C4544B' : '#C99A4A',
-                          fillOpacity: isSelected ? 0.25 : 0.08,
-                          weight: isSelected ? 3 : 1,
+                          color: isSelected ? '#1F4057' : z.risk === 'CRITICAL' || z.risk === 'HIGH' ? '#102B3F' : '#526B80',
+                          fillColor: isSelected ? '#1F4057' : z.risk === 'CRITICAL' || z.risk === 'HIGH' ? '#102B3F' : '#526B80',
+                          fillOpacity: isSelected ? 0.28 : 0.12,
+                          weight: isSelected ? 3 : 1.5,
                         }}
                         eventHandlers={{
                           click: () => setSelectedRegionId(z.zone),
@@ -299,7 +285,7 @@ export default function GisMap() {
                       key={`pred-${z.id}`}
                       center={[z.center.lat, z.center.lng]}
                       radius={700}
-                      pathOptions={{ color: '#C4544B', fillColor: '#C4544B', fillOpacity: 0.18, weight: 2, dashArray: '4 4' }}
+                      pathOptions={{ color: '#991B1B', fillColor: '#991B1B', fillOpacity: 0.15, weight: 2, dashArray: '4 4' }}
                       eventHandlers={{
                         click: () => setSelectedRegionId(z.id),
                       }}
@@ -317,12 +303,12 @@ export default function GisMap() {
                       }}
                     >
                       <Popup>
-                        <div className="text-xs">
-                          <div className="font-medium">{c.id}</div>
+                        <div className="text-sm font-semibold text-[#111111]">
+                          <div className="font-bold">{c.id}</div>
                           <div>
                             {c.fraudType} · {formatINR(c.amount)}
                           </div>
-                          <div className="text-paper-faint mt-1">Zone: {zoneById(c.victimZone).name}</div>
+                          <div className="text-xs text-[#222222] mt-1 font-medium">Zone: {zoneById(c.victimZone).name}</div>
                         </div>
                       </Popup>
                     </Marker>
@@ -363,17 +349,17 @@ export default function GisMap() {
 
           {/* Region Quick Select Bar */}
           <div className="mt-4 flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
-            <span className="text-xs text-paper-faint shrink-0 font-medium">Select Region:</span>
+            <span className="text-xs text-[#222222] shrink-0 font-bold uppercase tracking-wider">Select Region:</span>
             {ZONES.map((z) => {
               const active = z.id === selectedRegionId
               return (
                 <button
                   key={z.id}
                   onClick={() => setSelectedRegionId(z.id)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-medium shrink-0 transition-colors ${
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold shrink-0 transition-colors cursor-pointer ${
                     active
-                      ? 'bg-intel-600 text-paper border border-intel-400'
-                      : 'bg-panel-raised text-paper-dim border border-line-soft hover:text-paper hover:border-line'
+                      ? 'bg-[#102B3F] text-[#FFFFFF] border border-[#102B3F]'
+                      : 'bg-[#FFFFFF] text-[#111111] border border-[#D6D6D0] hover:bg-[#F0F0EC]'
                   }`}
                 >
                   {z.name}
@@ -381,6 +367,19 @@ export default function GisMap() {
               )
             })}
           </div>
+
+          {/* Prominent Explainable AI (XAI) & Dispatch Intelligence Section directly below GIS Map */}
+          {selectedRegionData && (
+            <div className="mt-6 grid grid-cols-1 xl:grid-cols-2 gap-6">
+              <XAIExplanation
+                explanation={calculateRegionXAI(selectedRegionId, selectedRegionData, complaints, predictions)}
+              />
+              <DispatchIntelligence
+                regionData={selectedRegionData}
+                explanation={calculateRegionXAI(selectedRegionId, selectedRegionData, complaints, predictions)}
+              />
+            </div>
+          )}
         </div>
 
         <div className="space-y-4">
@@ -389,12 +388,12 @@ export default function GisMap() {
             <div className="px-5 py-4 space-y-3">
               {(
                 [
-                  ['complaints', 'Complaints', '#C99A4A'],
-                  ['historical', 'Historical Risk', '#C99A4A'],
-                  ['predicted', 'Predicted Risk', '#C4544B'],
-                  ['atms', 'ATMs', '#8FA4B8'],
-                  ['banks', 'Bank Branches', '#5FA37D'],
-                  ['merchants', 'Merchant Cash-Out Points', '#C4D0DA'],
+                  ['complaints', 'Complaints', '#1F4057'],
+                  ['historical', 'Historical Risk', '#102B3F'],
+                  ['predicted', 'Predicted Risk', '#991B1B'],
+                  ['atms', 'ATMs', '#102B3F'],
+                  ['banks', 'Bank Branches', '#166534'],
+                  ['merchants', 'Merchant Cash-Out Points', '#526B80'],
                 ] as Array<[keyof Layers, string, string]>
               ).map(([key, label, color]) => (
                 <label key={key} className="flex items-center justify-between gap-3 cursor-pointer py-1">
@@ -403,7 +402,7 @@ export default function GisMap() {
                     type="checkbox"
                     checked={layers[key]}
                     onChange={() => toggle(key)}
-                    className="w-5 h-5 shrink-0 accent-intel-500"
+                    className="w-5 h-5 shrink-0 accent-[#102B3F]"
                   />
                 </label>
               ))}
@@ -412,73 +411,74 @@ export default function GisMap() {
 
           <Panel>
             <PanelHeader title="Location Details" subtitle="Selected region intelligence" />
-            <div className="px-5 py-4">
+            <div className="px-5 py-5">
               {selectedRegionData ? (
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-[0.65rem] font-semibold tracking-wider mono px-2 py-0.5 rounded bg-critical-500/20 text-critical-400 border border-critical-500/40 uppercase">
+                    <span className="text-xs font-bold tracking-wider mono px-2.5 py-1 rounded bg-[#102B3F] text-[#FFFFFF] uppercase">
                       PREDICTIVE ALERT
                     </span>
                     <RiskBadge risk={selectedRegionData.riskLevel} />
                   </div>
 
-                  <div className="text-base font-medium text-paper">{selectedRegionData.alertType}</div>
+                  <div className="text-xl font-bold text-[#000000]">{selectedRegionData.alertType}</div>
 
-                  <div className="space-y-2 text-sm border-t border-b border-line-soft py-3">
+                  <div className="space-y-2.5 text-[15px] border-t border-b border-[#D6D6D0] py-3.5">
                     <div className="flex justify-between items-center">
-                      <span className="text-paper-faint">Location:</span>
-                      <span className="mono text-paper font-medium">{selectedRegionData.location}</span>
+                      <span className="text-[#222222] font-semibold">Location:</span>
+                      <span className="mono text-[#000000] font-bold">{selectedRegionData.location}</span>
                     </div>
 
                     <div className="flex justify-between items-center">
-                      <span className="text-paper-faint">Area:</span>
-                      <span className="text-paper font-medium">{selectedRegionData.area}</span>
+                      <span className="text-[#222222] font-semibold">Area:</span>
+                      <span className="text-[#000000] font-bold">{selectedRegionData.area}</span>
                     </div>
 
                     <div className="flex justify-between items-center">
-                      <span className="text-paper-faint">Time window:</span>
-                      <span className="mono text-paper">{selectedRegionData.timeWindow}</span>
+                      <span className="text-[#222222] font-semibold">Time window:</span>
+                      <span className="mono text-[#000000] font-bold">{selectedRegionData.timeWindow}</span>
                     </div>
 
                     <div className="flex justify-between items-center">
-                      <span className="text-paper-faint">Risk:</span>
-                      <span className="mono text-paper font-semibold text-critical-400">{selectedRegionData.risk}%</span>
+                      <span className="text-[#222222] font-semibold">Risk:</span>
+                      <span className="mono text-[#000000] font-bold text-lg">{selectedRegionData.risk}%</span>
                     </div>
 
                     <div className="flex justify-between items-center">
-                      <span className="text-paper-faint">Linked complaints:</span>
-                      <span className="mono text-paper">{selectedRegionData.linkedComplaints}</span>
+                      <span className="text-[#222222] font-semibold">Linked complaints:</span>
+                      <span className="mono text-[#000000] font-bold">{selectedRegionData.linkedComplaints}</span>
                     </div>
                   </div>
 
                   <div>
-                    <div className="text-xs text-paper-faint font-medium mb-1">Action recommended:</div>
-                    <div className="text-xs text-paper bg-panel-raised p-2.5 rounded border border-line-soft leading-relaxed">
+                    <div className="text-sm font-bold text-[#000000] mb-1.5">Action recommended:</div>
+                    <div className="text-sm text-[#111111] font-medium bg-[#F0F0EC] p-3.5 rounded border border-[#D6D6D0] leading-relaxed">
                       {selectedRegionData.actionRecommended}
                     </div>
                   </div>
                 </div>
               ) : (
-                <div className="text-xs text-paper-faint">Click a marker or zone on the map to see details here.</div>
+                <div className="text-sm text-[#222222] font-medium">Click a marker or zone on the map to see details here.</div>
               )}
             </div>
           </Panel>
 
+
           {Object.keys(predictions).length > 0 && (
             <Panel>
               <PanelHeader title="Active Predictions" />
-              <div className="divide-y divide-line-soft">
+              <div className="divide-y divide-[#D6D6D0]">
                 {Object.values(predictions).map((p) => (
                   <div
                     key={p.complaintId}
                     onClick={() => setSelectedRegionId(p.zone)}
-                    className="px-5 py-3 cursor-pointer hover:bg-panel-raised transition-colors"
+                    className="px-5 py-3.5 cursor-pointer hover:bg-[#F0F0EC] transition-colors"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-paper mono">{p.complaintId}</span>
+                      <span className="text-base text-[#000000] font-bold mono">{p.complaintId}</span>
                       <RiskBadge risk={p.risk} />
                     </div>
-                    <div className="text-xs text-paper-faint mt-1">
+                    <div className="text-xs text-[#222222] font-semibold mt-1">
                       {zoneById(p.zone).name} · {p.confidence}% confidence
                     </div>
                   </div>
@@ -491,4 +491,5 @@ export default function GisMap() {
     </div>
   )
 }
+
 

@@ -86,6 +86,28 @@ export interface PredictionEvidenceFactor {
   strength: 'LOW' | 'MEDIUM' | 'HIGH'
 }
 
+export interface XAIDriver {
+  featureKey: string
+  label: string
+  rawFeatureValue: string | number
+  impactScore: number
+  direction: 'positive' | 'negative'
+  level: 'HIGH' | 'MEDIUM' | 'LOW'
+  barWidthPercent: number
+  explanation: string
+}
+
+export interface RegionXAIExplanation {
+  regionId: string
+  regionName: string
+  riskScore: number
+  riskLevel: RiskLevel
+  drivers: XAIDriver[]
+  positiveFactors: string[]
+  negativeFactors: string[]
+  disclaimer: string
+}
+
 export interface Prediction {
   complaintId: string
   zone: string
@@ -95,8 +117,10 @@ export interface Prediction {
   windowEnd: string
   candidates: CashOutCandidate[]
   evidence: PredictionEvidenceFactor[]
+  xaiExplanation?: RegionXAIExplanation
   generatedAt: string
 }
+
 
 export type RecipientType = 'BANK' | 'LAW ENFORCEMENT' | 'LOCAL RESPONSE UNIT'
 export type AlertStatus = 'PREPARED' | 'DISPATCHED' | 'ACKNOWLEDGED'
